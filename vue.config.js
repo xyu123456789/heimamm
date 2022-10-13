@@ -1,6 +1,13 @@
 const path = require('path')
 module.exports = {
   lintOnSave: false,
+  configureWebpack: {
+    devServer: {
+      open: true,
+      port: 8888,
+      host: 'localhost'
+    }
+  },
   chainWebpack: config => {
     const svgRule = config.module.rule('svg')
     svgRule.uses.clear()
