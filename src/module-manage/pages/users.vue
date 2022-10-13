@@ -40,7 +40,7 @@
         </el-table>
       </template>
       <el-row type="flex" justify="end" align="middle" style="height: 60px">
-        <el-pagination background layout="prev, pager, next,size,total" :total="total">
+        <el-pagination background layout="prev, pager, next,size,total" :total="total1">
         </el-pagination>
       </el-row>
     </el-card>
@@ -61,7 +61,7 @@ export default {
           jiaos: 'admin1'
         }
       ],
-      total: 0
+      total1: 0
     }
   },
 
