@@ -1,4 +1,5 @@
 const path = require('path')
+
 module.exports = {
   lintOnSave: false,
   chainWebpack: config => {
@@ -22,4 +23,5 @@ module.exports = {
       .use('file-loader')
       .loader('file-loader')
   }
+
 }
