@@ -1,14 +1,9 @@
 <template>
   <div class="add-form">
-    <!-- <el-dialog
-      :title="titleInfo.text + titleInfo.pageTitle"
-      :visible.sync="dialogFormVisible"
-    > -->
     <el-dialog
-      :title="formBase.id ? '编辑用户' : '创建用户'"
       :visible="dialogFormVisible"
       @close="onClose"
-      @open="onOpen"
+      title="titleInfo.text + titleInfo.pageTitle"
     >
       <el-form
         :rules="ruleInline"
@@ -20,47 +15,52 @@
       >
         <el-form-item label="企业名称" prop="shortName">
           <el-input v-model="formBase.shortName"></el-input>
-          <el-checkbox
-            v-model="formBase.isFamous"
-            :true-label="1"
-            :false-label="0"
-            >是否为名企</el-checkbox
-          >
+          <!-- <el-checkbox v-model="formBase.isFamous">是否为名企</el-checkbox> -->
         </el-form-item>
         <el-form-item label="所属公司" prop="company">
           <el-input v-model="formBase.company"></el-input>
           <p>https://www.tianyancha.com （在此可查询所属公司全称及简称）</p>
         </el-form-item>
         <el-form-item label="城市" prop="province">
-          <el-select
-            class="filter-item"
-            style="width: 130px"
-            v-model="formBase.province"
-            @keyup.enter="handleFilter"
-            @change="handleProvince"
-            filterable
-          >
-            <el-option
-              v-for="item in citySelect.province"
-              :key="item"
-              :label="item"
-              :value="item"
-            ></el-option>
-          </el-select>
-          <el-select
-            class="filter-item"
-            style="width: 130px"
-            v-model="formBase.city"
-            @keyup.enter="handleFilter"
-            filterable
-          >
-            <el-option
-              v-for="item in citySelect.cityDate"
-              :key="item"
-              :label="item"
-              :value="item"
-            ></el-option>
-          </el-select>
+          <el-row>
+            <el-col :span="12">
+              <el-form-item label="" prop="province">
+                <el-select
+                  class="filter-item"
+                  style="width: 130px"
+                  v-model="formBase.province"
+                  @keyup.enter="handleFilter"
+                  @change="handleProvince"
+                  filterable
+                >
+                  <el-option
+                    v-for="item in citySelect.province"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="" prop="city">
+                <el-select
+                  class="filter-item"
+                  style="width: 130px"
+                  v-model="formBase.city"
+                  @keyup.enter="handleFilter"
+                  filterable
+                >
+                  <el-option
+                    v-for="item in citySelect.cityDate"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form-item>
         <el-form-item label="方向（企业标签）" prop="tags">
           <el-input v-model="formBase.tags"></el-input>
@@ -84,6 +84,7 @@
   </div>
 </template>
 <script>
+// import { update, add } from '@/api/base/users'
 import { update, add } from '@/api/hmmm/companys'
 import { provinces, citys } from '@/api/hmmm/citys.js'
 export default {
@@ -93,15 +94,16 @@ export default {
     //   type: Object,
     //   required: true
     // },
-    // formBase: {
-    //   type: Object,
-    //   required: true
-    // }
+    newFormBase: {
+      type: Object,
+      required: true
+    },
     dialogFormVisible: {
       type: Boolean,
       required: true
     }
   },
+
   data () {
     return {
       // dialogFormVisible: false,
@@ -109,16 +111,9 @@ export default {
         province: [],
         cityDate: []
       },
-      formBase: {
-        shortName: '',
-        company: '',
-        isFamous: '0',
-        province: '',
-        city: '',
-        tags: '',
-        remarks: '',
-        state: ''
-      },
+      formBase: {},
+      // this.newFormBase
+
       // 表单验证
       ruleInline: {
         shortName: [
@@ -127,38 +122,48 @@ export default {
         province: [
           { required: true, message: '请选择省份', trigger: 'change' }
         ],
+        city: [
+          { required: true, message: '请选择城市', trigger: 'change' }
+        ],
         tags: [{ required: true, message: '请请输标签', trigger: 'blur' }]
       }
     }
   },
   computed: {},
+  mounted () {
+    console.log(this.formBase)
+  },
+  watch: {
+    // newFormBase () {
+    //   this.formBase = { ...this.newFormBase }
+    // }
+    newFormBase () {
+      this.formBase = { ...this.newFormBase }
+    }
+  },
   methods: {
     // 弹层显示
-    dialogFormV () {
-      this.dialogFormVisible = true
-    },
+    // dialogFormV () {
+    //   this.dialogFormVisible = true
+    // },
     // 弹层隐藏
     dialogFormH () {
       // this.dialogFormVisible = false
       this.$emit('update:dialogFormVisible', false)
     },
-    // 关闭弹层
+    // 关闭弹出层
     onClose () {
-      this.dialogFormH()
-    },
-    onOpen () {
       this.formBase = {
         shortName: '',
         company: '',
-        isFamous: '0',
+        isFamous: true,
         province: '',
         city: '',
         tags: '',
         remarks: ''
       }
-      this.$nextTick(() => {
-        this.$refs.dataForm.resetFields()
-      })
+      this.$refs.dataForm.resetFields()
+      this.dialogFormH()
     },
     // 获取省
     getCityData: function () {
@@ -171,34 +176,55 @@ export default {
     },
     // 表单提交
     createData () {
-      this.$refs.dataForm.validate(async valid => {
+      this.$refs.dataForm.validate(async (valid) => {
         if (valid) {
           this.dialogFormH()
           const data = {
             ...this.formBase
           }
-          if (this.formBase.id) {
-            await update(data).then(() => {
+          if (this.newFormBase.id) {
+            // await update(data).then(() => {
+            //   this.$emit('newDataes', this.formBase)
+            // })
+
+            console.log(data)
+            try {
+              // 处理数据，删除formBase中接口不需要的属性
+              for (const key in data) {
+                if (key === 'username' || key === 'addDate' || key === 'state' || key === 'creatorID') {
+                  delete data[key]
+                }
+              }
+              data.isFamous = true
+              await update(data)
               this.$emit('newDataes', this.formBase)
-            })
+            } catch (error) {
+              this.$message.error(error)
+            }
           } else {
-            console.log(this.formBase)
-            await add(this.formBase).then(() => {
+            await add(data).then(() => {
               this.$emit('newDataes', this.formBase)
             })
+            // try {
+            //   await add(this.formBase)
+            //   this.$emit('newDataes', this.formBase)
+            // } catch (error) {
+            //   this.$message.error(error)
+            // }
           }
         } else {
           this.$message.error('*号为必填项!')
         }
       })
+      // this.$refs.dataForm.resetFields()
     }
   },
   // 挂载结束
 
-  mounted: function () { },
   // 创建完毕状态
   created () {
     this.getCityData()
+    console.log(this.newFormBase)
   },
   // 组件更新
   updated: function () { }

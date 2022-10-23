@@ -121,7 +121,6 @@
         <el-table-column prop="remarks" label="备注" width="120" align="center">
         </el-table-column>
         <el-table-column
-          ref="status"
           prop="state"
           label="状态"
           :formatter="manner"
@@ -140,18 +139,16 @@
               @click="editorAdmin(row)"
             ></el-button>
             <el-button
-              :type="!row.state ? 'success' : 'warning'"
-              :icon="!row.state ? 'el-icon-check' : 'el-icon-close'"
+              type="success"
+              :icon="switchButton ? 'el-icon-check' : 'el-icon-close'"
               circle
               plain
-              @click="toggleStatus(row)"
             ></el-button>
             <el-button
               type="danger"
               icon="el-icon-delete"
               circle
               plain
-              @click="delAdmin(row)"
             ></el-button>
           </template>
         </el-table-column>
@@ -174,20 +171,23 @@
 
     <!-- <increase-admin :dialogVisible.sync="dialogFormVisible" /> -->
     <CompanysAdd
-      ref="formDate"
       :dialogFormVisible.sync="dialogFormVisible"
+      :newFormBase="startFormBase"
       @newDataes="newDataes"
     />
   </div>
 </template>
 
 <script>
-import { list, detail, disabled, remove } from '../../api/hmmm/companys'
+import { list } from '../../api/hmmm/companys'
 import { provinces, citys } from '../../api/hmmm/citys'
 import { status } from '../../api/hmmm/constants'
-import CompanysAdd from '../components/companys-add.vue'
+// import increaseAdmin from '../components/increase-admin.vue'
+import CompanysAdd from '../components/companys-add1.vue'
+
 export default {
   components: {
+    // increaseAdmin,
     CompanysAdd
   },
   data () {
@@ -208,6 +208,15 @@ export default {
       provinces: '',
       citys: '',
       dialogFormVisible: false,
+      // startFormBase: {
+      //   shortName: '',
+      //   company: '',
+      //   isFamous: true,
+      //   province: '',
+      //   city: '',
+      //   tags: '',
+      //   remarks: ''
+      // },
       loading: false,
       rows: ''
     }
@@ -223,8 +232,6 @@ export default {
     onSubmit () {
       this.list()
     },
-
-    // 获取企业管理列表
     async list () {
       this.loading = true
       // 如果值是空字符串，就不加入请求体
@@ -236,6 +243,11 @@ export default {
       }
       // this.formInline = obj
       const { data } = await list(obj)
+      // data.items.forEach((item, index) => {
+      //   // this.page.pageIndex当前页 this.page.pageSize 每页显示多少
+      //   item.index = (index + 1) + (this.formInline.page - 1) * this.formInline.pagesize
+      //   return item
+      // })
       this.tableData = data.items
       this.total = data.counts
       this.loading = false
@@ -269,68 +281,23 @@ export default {
       console.log('submit!')
     },
     // 新增用户后发送请求重置列表,清空弹出层数据
-    newDataes () {
+    newDataes (newFormBase) {
       this.list()
+      // console.log(newFormBase)
+      // this.newFormBase = {
+      //   shortName: '',
+      //   company: '',
+      //   isFamous: true,
+      //   province: '',
+      //   city: '',
+      //   tags: '',
+      //   remarks: ''
+      // }
     },
     // 编辑用户
-    async editorAdmin (row) {
+    editorAdmin (row) {
       this.dialogFormVisible = true
-      const a = { id: row.id }
-      const { data } = await detail(a)
-      for (const key in data) {
-        if (key === 'username' || key === 'addDate' || key === 'creatorID') {
-          delete data[key]
-        }
-      }
-      // data.isFamous ? data.isFamous = true : data.isFamous = false
-      this.$refs.formDate.formBase = data
-    },
-
-    // 切换状态
-    toggleStatus (row) {
-      this.$confirm('已成功启用，是否继续', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        console.log(row)
-        const a = { id: row.id, state: !row.state ? 1 : 0 }
-        console.log(a)
-        await disabled(a)
-        this.list()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
-    },
-
-    // 删除用户
-    delAdmin (row) {
-      this.$confirm('此操作将永久删除用户，是否继续？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(async () => {
-        // const a = { id: row.id, state: !row.state ? 1 : 0 }
-        console.log(row)
-        await remove(row)
-        this.list()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        })
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
-      })
+      this.startFormBase = row
     }
   }
 }

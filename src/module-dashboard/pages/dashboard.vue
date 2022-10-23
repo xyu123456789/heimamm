@@ -1,17 +1,23 @@
 <template>
   <div class="dashboard-container">
-    <el-row :gutter="20" >
+    <el-row :gutter="20">
       <el-col :xs="24" :sm="6" :span="6">
-        <el-card class="box-card" :body-style="{ padding: '5px 20px' , minHeight: '230px' }">
+        <el-card
+          class="box-card"
+          :body-style="{ padding: '5px 20px', minHeight: '230px' }"
+        >
           <div class="header">
             <span>总销售额</span>
-            <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="指标说明"
+              placement="top"
+            >
               <i class="el-icon-warning"></i>
             </el-tooltip>
           </div>
-          <div class="total">
-            ¥ 126,560
-          </div>
+          <div class="total">¥ 126,560</div>
           <div class="trends">
             <span>周同比 12% <i class="el-icon-caret-top"></i></span>
             <span>日环比 11% <i class="el-icon-caret-bottom"></i></span>
@@ -23,10 +29,18 @@
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="6" :span="6">
-        <el-card class="box-card" :body-style="{ padding: '5px 20px' , minHeight: '230px' }">
+        <el-card
+          class="box-card"
+          :body-style="{ padding: '5px 20px', minHeight: '230px' }"
+        >
           <div class="header">
             <span>访问量</span>
-            <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="指标说明"
+              placement="top"
+            >
               <i class="el-icon-warning"></i>
             </el-tooltip>
           </div>
@@ -34,16 +48,22 @@
             <raddar-chart></raddar-chart>
           </div>
           <div class="hr"></div>
-          <div class="footer">
-            <span>日访问量</span> <span>1,234</span>
-          </div>
+          <div class="footer"><span>日访问量</span> <span>1,234</span></div>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="6" :span="6">
-        <el-card class="box-card" :body-style="{ padding: '5px 20px' , minHeight: '230px' }">
+        <el-card
+          class="box-card"
+          :body-style="{ padding: '5px 20px', minHeight: '230px' }"
+        >
           <div class="header">
             <span>支付笔数</span>
-            <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="指标说明"
+              placement="top"
+            >
               <i class="el-icon-warning"></i>
             </el-tooltip>
           </div>
@@ -51,16 +71,22 @@
             <pie-chart></pie-chart>
           </div>
           <div class="hr"></div>
-          <div class="footer">
-            <span>转化率</span> <span>1,234</span>
-          </div>
+          <div class="footer"><span>转化率</span> <span>1,234</span></div>
         </el-card>
       </el-col>
       <el-col :xs="24" :sm="6" :span="6">
-        <el-card class="box-card" :body-style="{ padding: '5px 20px' , minHeight: '230px' }">
+        <el-card
+          class="box-card"
+          :body-style="{ padding: '5px 20px', minHeight: '230px' }"
+        >
           <div class="header">
             <span>运营活动效果</span>
-            <el-tooltip class="item" effect="dark" content="指标说明" placement="top">
+            <el-tooltip
+              class="item"
+              effect="dark"
+              content="指标说明"
+              placement="top"
+            >
               <i class="el-icon-warning"></i>
             </el-tooltip>
           </div>
@@ -76,7 +102,7 @@
       </el-col>
     </el-row>
 
-    <br>
+    <br />
     <!-- 销售表 -->
     <el-card class="sales-card">
       <div class="header">
@@ -88,7 +114,8 @@
           range-separator="至"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
-          :picker-options="pickerOptions2">
+          :picker-options="pickerOptions2"
+        >
         </el-date-picker>
       </div>
       <el-tabs v-model="activeName" @tab-click="handleSetLineChartData">
@@ -105,10 +132,20 @@
               <h4>门店销售额排名</h4>
               <ul>
                 <li>
-                  <el-row class="row" v-for="(item, index) in salesTable" :key="'sals-'+index">
-                    <el-col :span="3"><div v-bind:class="[item.num > 3 ? 'light' : '', 'circular']" >{{item.num}}</div></el-col>
-                    <el-col :span="16">{{item.title}}</el-col>
-                    <el-col :span="5">{{item.val}}</el-col>
+                  <el-row
+                    class="row"
+                    v-for="(item, index) in salesTable"
+                    :key="'sals-' + index"
+                  >
+                    <el-col :span="3"
+                      ><div
+                        v-bind:class="[item.num > 3 ? 'light' : '', 'circular']"
+                      >
+                        {{ item.num }}
+                      </div></el-col
+                    >
+                    <el-col :span="16">{{ item.title }}</el-col>
+                    <el-col :span="5">{{ item.val }}</el-col>
                   </el-row>
                 </li>
               </ul>
@@ -119,10 +156,10 @@
     </el-card>
     <!-- 销售表 /-->
 
-    <br>
+    <br />
     <!-- 搜索热度 -->
-    <el-row :gutter="20" >
-      <el-col :xs="24" :sm="12" >
+    <el-row :gutter="20">
+      <el-col :xs="24" :sm="12">
         <el-card class="hots">
           <div slot="header" class="header">
             <span>线上热门搜索</span>
@@ -136,16 +173,36 @@
               </el-dropdown-menu>
             </el-dropdown>
           </div>
-          <el-table height="280" :data="hotsTableData" style="width: 100%" :default-sort = "{prop: 'users', order: 'descending'}">
+          <el-table
+            height="280"
+            :data="hotsTableData"
+            style="width: 100%"
+            :default-sort="{ prop: 'users', order: 'descending' }"
+          >
             <el-table-column type="index" width="50"></el-table-column>
             <el-table-column prop="title" label="关键词"></el-table-column>
-            <el-table-column prop="users" label="人数" sortable width="80"></el-table-column>
-            <el-table-column prop="increase" label="周增长率" sortable width="100"></el-table-column>
+            <el-table-column
+              prop="users"
+              label="人数"
+              sortable
+              width="80"
+            ></el-table-column>
+            <el-table-column
+              prop="increase"
+              label="周增长率"
+              sortable
+              width="100"
+            ></el-table-column>
           </el-table>
-          <el-pagination class="pagination" background layout="prev, pager, next" :total="500"></el-pagination>
+          <el-pagination
+            class="pagination"
+            background
+            layout="prev, pager, next"
+            :total="500"
+          ></el-pagination>
         </el-card>
       </el-col>
-      <el-col :xs="24" :sm="12" >
+      <el-col :xs="24" :sm="12">
         <el-card class="hots">
           <div slot="header" class="header">
             <span>销售额类别占比</span>
@@ -177,7 +234,7 @@
     </el-row>
     <!-- 搜索热度 /-->
 
-    <br>
+    <br />
     <!-- 周搜索趋势 -->
     <el-card class="hots">
       <div slot="header" class="header">
@@ -197,7 +254,6 @@
       </div>
     </el-card>
     <!-- 周搜索趋势 /-->
-
   </div>
 </template>
 
@@ -382,7 +438,7 @@ export default {
     height: 300px;
   }
   .table {
-    color: rgba(0,0,0,.65);
+    color: rgba(0, 0, 0, 0.65);
     h4 {
       color: #000;
       font-weight: 500;
@@ -404,11 +460,11 @@ export default {
       font-size: 12px;
       line-height: 20px;
       font-weight: 600;
-      border-radius:50%
+      border-radius: 50%;
     }
     .light {
       background-color: #f5f5f5;
-      color: rgba(0,0,0,.65);
+      color: rgba(0, 0, 0, 0.65);
     }
   }
 }
